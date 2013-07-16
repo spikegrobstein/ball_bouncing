@@ -1,3 +1,16 @@
+window.requestAnimFrame = function(){
+    return (
+            window.requestAnimationFrame       ||
+            window.webkitRequestAnimationFrame ||
+            window.mozRequestAnimationFrame    ||
+            window.oRequestAnimationFrame      ||
+            window.msRequestAnimationFrame     ||
+            function(/* function */ callback){
+                window.setTimeout(callback, 1000 / 60);
+            }
+        );
+}();
+
 (function( globals ){
 
   var
@@ -83,11 +96,18 @@
     globals.balls.push(new Ball());
   }
 
-  var animator = setInterval(function() {
+  var animate = function() {
+    requestAnimFrame(animate.bind(this));
     var ball = null;
-    for ( ball in this ) {
-      this[ball].step();
-    }
-  }.bind( globals.balls ), 10);
+    for (ball in this) { this[ball].step(); }
+  }.bind( globals.balls )
+
+  animate();
+  // var animator = setInterval(function() {
+    // var ball = null;
+    // for ( ball in this ) {
+      // this[ball].step();
+    // }
+  // }.bind( globals.balls ), 10);
 
 }(window));
